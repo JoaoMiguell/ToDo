@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, TextInput, Button } from "react-native";
+import { View, Text, Image, TouchableOpacity, TextInput, Button, ScrollView, Linking } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Dialog } from '@rneui/themed';
 import { useState, useContext } from "react";
@@ -51,9 +51,15 @@ export function Home() {
     }))
   }
 
+  function deleteAssign(index:number): void {
+    setAssignments(produce(assignments, draft => {
+      draft?.splice(index, 1)
+    }))
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <HomeContext.Provider value={{changeAssignStatus}}>
+      <HomeContext.Provider value={{changeAssignStatus, deleteAssign}}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => {
             setDarkMode(!darkMode)
@@ -61,14 +67,18 @@ export function Home() {
           }}>
             <Image source={darkMode ? light_mode : dark_mode} style={styles.icon_mode} />
           </TouchableOpacity>
-          <Image source={darkMode ? light_coffee : dark_coffee} />
+          <TouchableOpacity onPress={() => {
+            Linking.openURL("https://github.com/JoaoMiguell/ToDo")
+          }}>
+            <Image source={darkMode ? light_coffee : dark_coffee} />
+          </TouchableOpacity>
         </View>
         <View style={styles.header_titles}>
           <Text style={[styles.title, {color: darkMode? "#FFF" : "#000"}]}>HOJE</Text>
           <Text style={styles.subTitle}>AMANHÃ</Text>
         </View>
 
-        <View style={{flex: 1}}>
+        <ScrollView style={{flex: 1}}>
           {
             assignments?.map((assign, index) => (
               <Card key={index}
@@ -79,7 +89,7 @@ export function Home() {
               />
             ))
           }
-        </View>
+        </ScrollView>
         
 
         <Dialog isVisible={showModal} onBackdropPress={changeModal}>
