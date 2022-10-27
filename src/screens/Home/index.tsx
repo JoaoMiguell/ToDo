@@ -1,8 +1,9 @@
 import { View, Text, Image, TouchableOpacity, TextInput, Button, ScrollView, Linking } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Dialog } from '@rneui/themed';
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import produce from "immer"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 import HomeContext from "./context"
 import BackgroundContext from "../../components/Background/context"
@@ -57,14 +58,26 @@ export function Home() {
     }))
   }
 
+  async function ChangeTheme() {
+    setDarkMode(!darkMode)
+    changeTheme()
+    await AsyncStorage.setItem("theme", String(darkMode))
+    
+  }
+
+  useEffect(() => {
+    AsyncStorage.getItem("theme").then(value => {
+      const previusTheme = Boolean(value) as boolean|undefined
+      if (previusTheme == undefined) return
+      if (previusTheme) ChangeTheme()
+    })
+  }, [])
+
   return (
     <SafeAreaView style={styles.container}>
       <HomeContext.Provider value={{changeAssignStatus, deleteAssign}}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => {
-            setDarkMode(!darkMode)
-            changeTheme()
-          }}>
+          <TouchableOpacity onPress={() => ChangeTheme()}>
             <Image source={darkMode ? light_mode : dark_mode} style={styles.icon_mode} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => {
