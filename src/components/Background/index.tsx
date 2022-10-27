@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { setBackgroundColorAsync, } from "expo-navigation-bar"
+import { setBackgroundColorAsync, setButtonStyleAsync} from "expo-navigation-bar"
 import { View } from "react-native";
 import { useState } from "react"
 
@@ -14,7 +14,8 @@ interface Props {
 export function Background({children}: Props) {
   const [darkMode, setDarkMode] = useState(false)
 
-  setBackgroundColorAsync(darkMode?"#000":"#FFF")
+  setBackgroundColorAsync(darkMode?"black":"white")
+  setButtonStyleAsync(darkMode?"light":"dark")
 
   function changeTheme() { setDarkMode(!darkMode) }
 
