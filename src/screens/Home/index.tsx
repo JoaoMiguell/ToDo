@@ -70,7 +70,7 @@ export function Home() {
       const previusTheme = Boolean(value) as boolean|undefined
       if (previusTheme == undefined) return
       if (previusTheme) ChangeTheme()
-    })
+    }).catch(() => {return})
   }, [])
 
   return (
